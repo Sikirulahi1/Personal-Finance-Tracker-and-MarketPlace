@@ -7,3 +7,4 @@ Flask-Admin
 pandas
 Flask-Mail
 pytest
+Flask-Bcrypt

@@ -2,8 +2,22 @@
 {% block title %} Homepage {% endblock %}
 
 {% block content %}
-    <h1> Core </h1>
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+    <ul class="flashes">
+        <li class="flash {{ messages[-1][0] }}">{{ messages[-1][1] }}</li>  <!-- Display only the last message -->
+    </ul>
+{% endif %}
+{% endwith %}
+
+    {% if current_user.is_authenticated %}
+        <h1> Welcome {{ current_user.username }}</h1>
+    
+
 
     <a href=" {{ url_for('finance.index') }}">Finance Page</a>
     <a href=" {{ url_for('marketplace.index') }}">Market Page</a>
+
+    <a href=" {{ url_for('core.logout') }}">Logout</a>
+    {% endif %}
 {% endblock %}
