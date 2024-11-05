@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %} Homepage {% endblock %}
+
+{% block content %}
+    <h1> Core </h1>
+
+    <a href=" {{ url_for('finance.index') }}">Finance Page</a>
+    <a href=" {{ url_for('marketplace.index') }}">Market Page</a>
+{% endblock %}
