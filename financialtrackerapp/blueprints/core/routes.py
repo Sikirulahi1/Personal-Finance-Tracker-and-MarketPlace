@@ -6,6 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 core = Blueprint('core', __name__, template_folder = 'templates')
 
+
 @core.route('/')
 @login_required
 def index():
@@ -32,7 +33,13 @@ def signup():
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         
         # Create and save new user
-        new_user = User(username=username, password=password_hash, email=email)
+        new_user = User(
+            username=username, 
+            password=password_hash, 
+            email=email, balance=float(0.0), 
+            savings=float(0.0), budget=float(0.0)
+            )
+        
         db.session.add(new_user)
         db.session.commit()
         
@@ -55,7 +62,7 @@ def login():
             flash('Successfully logged in', 'success')
             # set up session management or user authentication (not now)
             login_user(user)
-            return redirect(url_for('core.index'))
+            return redirect(url_for('finance.index'))
         else:
             flash('Incorrect Email or Password', 'danger')
             return redirect(url_for('core.login'))

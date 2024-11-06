@@ -7,8 +7,34 @@
     <title>{% block title %} Default Page {% endblock %}</title>
 
 </head>
-<body>
 
-    {% block content %}{% endblock %}
-</body>
+<body>
+    <header>
+        {% block header %}
+        <h1> My Finance Tracker </h1>
+        <nav>
+            <ul>
+                <a href=" {{ url_for('finance.index') }}">Finance Page</a>
+                <a href=" {{ url_for('marketplace.index') }}">Market Page</a>
+            </ul>
+        </nav>
+        {% endblock %}
+    </header>
+
+    <main>
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+    <ul class="flashes">
+        <li class="flash {{ messages[-1][0] }}">{{ messages[-1][1] }}</li> 
+    </ul>
+{% endif %}
+{% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Website</p>
+        <a href=" {{ url_for('core.logout') }}">Logout</a>
+    </footer>
 </html>

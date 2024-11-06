@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Finance {% endblock %}
+
+{% block content %}
+    <h1> Save Your Money </h1>
+    <form action="{{ url_for('finance.save_money') }}" method="POST">
+        <input type="number" name="save_money" placeholder="Enter Amount to Save" required="required" step="0.01" autofocus>
+        <input type="submit" value="Save Now">
+    </form>
+{% endblock %}

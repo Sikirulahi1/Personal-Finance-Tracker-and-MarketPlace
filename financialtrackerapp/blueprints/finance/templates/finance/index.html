@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
-{% block title %} Finance {% endblock %}
+{% block title %} Homepage {% endblock %}
 
 {% block content %}
-    <h1> Finance Tracker </h1>
+
+    {% if current_user.is_authenticated %}
+        <h1> Welcome {{ current_user.username }}</h1>
+
+    Balance: ${{ "{:.2f}".format(current_user.balance) }} Savings: ${{ "{:.2f}".format(current_user.savings) }} Budget: ${{ "{:.2f}".format(current_user.budget) }}
+    <br>
+    <br>
+    <a href='{{ url_for('finance.deposit')}}'>Deposit</a>
+    <a href='{{ url_for('finance.withdraw')}}'>Withdraw</a>
+    <a href='{{ url_for('finance.save_money')}}'>Save Money</a>
+    <a href='{{ url_for('finance.withdraw_from_savings')}}'>Withdraw From Savings</a>
+
+    {% endif %}
 {% endblock %}

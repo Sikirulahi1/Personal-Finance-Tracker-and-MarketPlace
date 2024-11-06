@@ -7,6 +7,12 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String, nullable = False)
     password = db.Column(db.String, nullable = False)
     email = db.Column(db.String, nullable = False)
+
+    # Financial record of the user
+    balance = db.Column(db.Float, default=0.0)
+    savings = db.Column(db.Float, default=0.0)
+    budget = db.Column(db.Float, default=0.0)
+    
     
     def __repr__(self):
         return f" User {self.username} with the email {self.email}"

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Finance {% endblock %}
+
+{% block content %}
+    <h1> Withdraw Funds </h1>
+    <form action="{{ url_for('finance.withdraw') }}" method="POST">
+        <input type="number" name="withdraw" placeholder="Enter Amount to Withdraw" required="required" step="0.01" autofocus>
+        <input type="submit" value="Withdraw Funds">
+    </form>
+{% endblock %}
