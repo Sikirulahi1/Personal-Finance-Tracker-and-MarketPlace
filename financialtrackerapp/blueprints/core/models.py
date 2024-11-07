@@ -13,6 +13,8 @@ class User(db.Model, UserMixin):
     savings = db.Column(db.Float, default=0.0)
     budget = db.Column(db.Float, default=0.0)
     
+    cart_items = db.relationship('CartItem', back_populates = 'user')
+    
     
     def __repr__(self):
         return f" User {self.username} with the email {self.email}"

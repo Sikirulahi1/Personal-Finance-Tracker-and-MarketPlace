@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Marketplace - Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Order Summary</h1>
+
+    {% if cart_items %}
+        <div class="order-summary mt-4">
+            <p>You have ordered the following items:</p>
+            <ul class="list-group mb-4">
+                {% set subtotal = 0 %}
+                {% for item in cart_items %}
+                    <li class="list-group-item">
+                        <strong>{{ item.product_name }}</strong> - ${{ item.price | round(2) }} x {{ item.quantity }} 
+                        <span class="float-right">= ${{ (item.price * item.quantity) | round(2) }}</span>
+                    </li>
+                    {% set subtotal = subtotal + (item.price * item.quantity) %}
+                {% endfor %}
+            </ul>
+
+            <div class="order-details">
+                <p><strong>Subtotal:</strong> ${{total_amount}}</p>
+                <p><strong>Shipping:</strong> $5.00</p>
+                <p><strong>Taxes (5%):</strong> ${{ (total_amount * 0.05) | round(2) }}</p>
+                <hr>
+                <h4><strong>Total Amount:</strong> ${{ (total_amount + 5 + (total_amount * 0.05)) | round(2) }}</h4>
+            </div>
+        </div>
+
+        <!-- Confirm Payment Button -->
+        <form action="{{ url_for('marketplace.make_payment') }}" method="POST">
+            <input type='hidden' name='total_amount' value = {{ total_amount }}>
+            <button type="submit" class="btn btn-success mt-4">Confirm Payment</button>
+        </form>
+
+
+    {% endif %}
+</div>
+{% endblock %}
