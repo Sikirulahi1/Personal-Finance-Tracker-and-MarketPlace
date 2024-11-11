@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from financialtrackerapp.app import db
+from financialtrackerapp.blueprints.finance.models import Transaction
 
 finance = Blueprint('finance', __name__, template_folder='templates')
 
@@ -90,3 +91,9 @@ def withdraw_from_savings():
         return redirect(url_for('finance.index'))
     
     return render_template('finance/savingsWithdraw.html')
+
+@finance.route('/transaction_history')
+@login_required
+def transaction_history():
+    transactions = Transaction.query.filter_by(user_id=current_user.uid).order_by(Transaction.date.desc()).all()
+    return render_template('finance/transaction_history.html', transactions=transactions)

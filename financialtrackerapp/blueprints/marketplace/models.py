@@ -35,11 +35,18 @@ class CartItem(db.Model):
         return self.id
     
 
-# class TransactionItem(db.Model):
-#     __tablename__ = 'transaction_items'
-#     id = db.Column(db.Integer, primary_key=True)
-#     transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), nullable=False)
-#     product_name = db.Column(db.String(100), nullable=False)
-#     price = db.Column(db.Float, nullable=False)
-#     quantity = db.Column(db.Integer, nullable=False)
-#     total_price = db.Column(db.Float, nullable=False)
+class TransactionItem(db.Model):
+    __tablename__ = 'transaction_items'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), nullable=False)
+    product_name = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f"<TransactionItem(id={self.id}, product_name='{self.product_name}', price=${self.price:.2f}>"
+    
+    def get_id(self):  
+        return self.id
