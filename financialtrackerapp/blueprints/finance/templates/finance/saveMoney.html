@@ -3,9 +3,33 @@
 {% block title %} Finance {% endblock %}
 
 {% block content %}
-    <h1> Save Your Money </h1>
-    <form action="{{ url_for('finance.save_money') }}" method="POST">
-        <input type="number" name="save_money" placeholder="Enter Amount to Save" required="required" step="0.01" autofocus>
-        <input type="submit" value="Save Now">
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary">Save Your Money</h1>
+
+    <!-- Back Button -->
+    <div class="mb-4 text-start">
+        <a href="{{ url_for('finance.back_from_history')}}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <form action="{{ url_for('finance.save_money') }}" method="POST" class="shadow-lg p-4 rounded bg-light">
+        <!-- Save Amount Field -->
+        <div class="form-group mb-3">
+            <label for="save_money" class="form-label">Amount to Save</label>
+            <input type="number" class="form-control" name="save_money" id="save_money" placeholder="Enter Amount to Save" required step="0.01" autofocus>
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Optional description"></textarea>
+        </div>
+
+        <!-- Submit Button centered -->
+        <div class="text-center">
+            <input type="submit" value="Save Now" class="btn btn-success">
+        </div>
     </form>
+</div>
 {% endblock %}

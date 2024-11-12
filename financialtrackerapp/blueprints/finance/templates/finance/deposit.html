@@ -1,11 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %} Finance {% endblock %}
+{% block title %}Finance{% endblock %}
 
 {% block content %}
-    <h1> Deposit Funds </h1>
-    <form action="{{ url_for('finance.deposit') }}" method="POST">
-        <input type="number" name="deposit" placeholder="Enter Amount to Deposit" required="required" step="0.01" autofocus>
-        <input type="submit" value="Confirm Deposit">
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary">Deposit Funds</h1>
+
+        <!-- Back Button -->
+        <div class="mb-4 text-start">
+            <a href="{{ url_for('finance.back_from_history')}}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+        
+    <form action="{{ url_for('finance.deposit') }}" method="POST" class="shadow-lg p-4 rounded bg-light">
+        <!-- Deposit Amount Field -->
+        <div class="form-group mb-3">
+            <label for="deposit" class="form-label">Amount to Deposit</label>
+            <input type="number" class="form-control" name="deposit" id="deposit" placeholder="Enter Amount to Deposit" required step="0.01" autofocus>
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Optional description"></textarea>
+        </div>
+
+        <!-- Submit Button centered -->
+        <div class="text-center">
+            <input type="submit" value="Confirm Deposit" class="btn btn-success">
+        </div>
     </form>
+</div>
 {% endblock %}

@@ -9,7 +9,6 @@ from financialtrackerapp.blueprints.finance.models import Transaction
 marketplace = Blueprint('marketplace', __name__, template_folder = 'templates')
 
 @marketplace.route('/')
-@login_required
 def index():
     # Fetch all the products from the database
     products = Product.query.all()
@@ -29,15 +28,17 @@ def add_to_cart():
     cart_item = CartItem.query.filter_by(user_id=user_id, product_id=product_id).first()
     if cart_item:
         cart_item.quantity += product_quantity
+        flash(f'Added {product_quantity} more of {product_name} to your cart.', 'success')
     else:
         new_item = CartItem(
-            product_id = product_id,
-            user_id = user_id,
-            product_name = product_name,
-            price = product_price,
-            quantity = product_quantity
+            product_id=product_id,
+            user_id=user_id,
+            product_name=product_name,
+            price=product_price,
+            quantity=product_quantity
         )
         db.session.add(new_item)
+        flash(f'Added {product_quantity} {product_name} to your cart.', 'success')
         
     db.session.commit()
     
@@ -61,6 +62,9 @@ def delete_from_cart(product_id):
     if item_to_delete:
         db.session.delete(item_to_delete)
         db.session.commit()
+        flash('Item removed from your cart.', 'info')
+    else:
+        flash('Item not found in your cart.', 'warning')
         
     return redirect(url_for('marketplace.cart_items'))
 
@@ -69,8 +73,8 @@ def delete_from_cart(product_id):
 @login_required
 def clear_cart():
     CartItem.query.filter_by(user_id=current_user.uid).delete()
-
     db.session.commit()
+    flash('Your cart has been cleared.', 'info')
     return redirect(url_for('marketplace.cart_items'))
 
 @marketplace.route('/proceed_to_checkout')
@@ -84,7 +88,6 @@ def proceed_to_checkout():
 def make_payment():
     try:
         total_amount = request.form.get('total_amount')
-
         total_amount = float(total_amount)
         user_id = current_user.uid
         cart_items = CartItem.query.filter_by(user_id=user_id).all()
@@ -97,7 +100,8 @@ def make_payment():
         transaction = Transaction(
             user_id=user_id,
             total_amount=total_amount,
-            transaction_type='Buying Items',
+            transaction_type='Purchase',
+            description = '--',
             status='Pending'
         )
         db.session.add(transaction)
@@ -114,8 +118,10 @@ def make_payment():
         current_user.balance -= total_amount
 
         # Step 3: Process each item in the cart and deduct quantities
+        product_list = []
         for item in cart_items:
             product = Product.query.filter_by(id=item.product_id).first()
+            
             if product and product.items_left >= item.quantity:
                 transaction_item = TransactionItem(
                     transaction_id=transaction.id,
@@ -124,6 +130,7 @@ def make_payment():
                     quantity=item.quantity,
                     total_price=item.price * item.quantity
                 )
+                product_list.append(item.product_name)
                 db.session.add(transaction_item)
                 
                 product.items_left -= item.quantity
@@ -137,6 +144,7 @@ def make_payment():
         # Step 4: Clear the cart and mark the transaction as completed
         CartItem.query.filter_by(user_id=user_id).delete()
         transaction.status = 'Completed'
+        transaction.description = f"Purchase of item: {product_list[-1]}" if len(product_list) == 1 else f"Purchase of items: {', '.join(product_list[:-1])} and {product_list[-1]}"
         db.session.commit()
         flash('Transaction completed successfully!', 'success')
         return redirect(url_for('finance.index'))
@@ -149,5 +157,10 @@ def make_payment():
 @marketplace.route('/transaction_history')
 @login_required
 def transaction_history():
-    transactions = Transaction.query.filter_by(user_id=current_user.uid).order_by(Transaction.date.desc()).all()
+    transactions = Transaction.query.filter_by(user_id=current_user.uid, transaction_type='Purchase').order_by(Transaction.date.desc()).all()
     return render_template('marketplace/transaction_history.html', transactions=transactions)
+
+@marketplace.route('/back_from_history')
+@login_required
+def back_from_history():
+    return redirect(url_for('marketplace.index'))

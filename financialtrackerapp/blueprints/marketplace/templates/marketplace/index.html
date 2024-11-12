@@ -4,12 +4,22 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center">Marketplace</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-center"><i class="fas fa-store-alt text-primary"></i> Marketplace</h1>
+        <!-- Logout Button Positioned Far Right -->
+        <a href="{{ url_for('core.logout') }}" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
     <!-- Navigation Links -->
     <div class="d-flex justify-content-center mb-4">
-        <a href="{{ url_for('marketplace.cart_items')}}" class="btn btn-outline-primary mx-2">View Cart</a>
-        <a href="{{ url_for('marketplace.transaction_history')}}" class="btn btn-outline-secondary mx-2">Transaction History</a>
+        <a href="{{ url_for('marketplace.cart_items')}}" class="btn btn-outline-primary mx-2">
+            <i class="fas fa-shopping-cart"></i> View Cart
+        </a>
+        <a href="{{ url_for('marketplace.transaction_history')}}" class="btn btn-outline-secondary mx-2">
+            <i class="fas fa-history"></i> Transaction History
+        </a>
     </div>
+
     <div class="row">
         {% for product in products %}
         <div class="col-md-4">
@@ -23,14 +33,16 @@
                     <!-- Form for Quantity Selection and Add to Cart -->
                     <form action="{{ url_for('marketplace.add_to_cart')}}" method="POST" class="d-flex flex-column flex-grow-1">
                         <div class="d-flex align-items-center mb-3">
-                            <label for="quantity-{{ product.id }}" class="mr-2">Quantity:</label>
+                            <label for="quantity-{{ product.id }}" class="mr-2"><i class="fas fa-sort-numeric-up"></i> Quantity:</label>
                             <input type="number" id="quantity-{{ product.id }}" name="product_quantity" min="1" max="{{ product.items_left }}" value="1" class="form-control" style="width: 70px;">
                         </div>
-                        <input type='hidden' name='product_id' value = " {{ product.id }} ">
+                        <input type='hidden' name='product_id' value="{{ product.id }}">
                         <input type="hidden" name="product_name" value="{{ product.product_name }}">
                         <input type="hidden" name="product_price" value="{{ product.price }}">
 
-                        <input type="submit" class="btn btn-primary w-100 mt-auto" value="ADD TO CART">
+                        <button type="submit" class="btn btn-primary w-100 mt-auto">
+                            <i class="fas fa-cart-plus"></i> ADD TO CART
+                        </button>
                     </form>
                 </div>
             </div>
@@ -38,6 +50,4 @@
         {% endfor %}
     </div>
 </div>
-
-
 {% endblock %}

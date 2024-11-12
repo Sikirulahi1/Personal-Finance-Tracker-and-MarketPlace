@@ -6,18 +6,35 @@
 <div class="container mt-5">
     <h1 class="mb-4">Your Transaction History</h1>
 
+    <!-- Styled Back Button -->
+    <div class="mb-4">
+        <a href="{{ url_for('marketplace.back_from_history')}}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
     {% if transactions %}
         {% for transaction in transactions %}
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h5 class="card-title mb-3">Transaction on {{ transaction.date.strftime('%Y-%m-%d %H:%M:%S') }}</h5>
-                    <p><strong>Status:</strong> <span class="badge {% if transaction.status == 'Completed' %}bg-success{% else %}bg-warning{% endif %}">{{ transaction.status }}</span></p>
+                    
+                    <!-- Status Badge -->
+                    <p>
+                        <strong>Status:</strong> 
+                        <span class="badge {% if transaction.status == 'Completed' %}bg-success{% else %}bg-warning{% endif %}">
+                            {{ transaction.status }}
+                        </span>
+                    </p>
+
+                    <!-- Total Amount -->
                     <p><strong>Total Amount:</strong> ${{ transaction.total_amount | round(2) }}</p>
 
+                    <!-- Items Purchased -->
                     <h6 class="mt-3">Items Purchased:</h6>
                     <ul class="list-unstyled">
                         {% for item in transaction.items %}
-                            <li class="d-flex justify-content-between">
+                            <li class="d-flex justify-content-between border-bottom py-2">
                                 <span>{{ item.product_name }} - ${{ item.price | round(2) }} x {{ item.quantity }}</span>
                                 <span><strong>${{ item.total_price | round(2) }}</strong></span>
                             </li>
@@ -27,9 +44,13 @@
             </div>
         {% endfor %}
     {% else %}
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center">
             You have no transactions yet. Start shopping now!
         </div>
     {% endif %}
 </div>
+
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 {% endblock %}
