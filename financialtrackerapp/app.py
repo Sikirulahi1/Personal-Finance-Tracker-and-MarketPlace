@@ -3,11 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from authlib.integrations.flask_client import OAuth
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
+oauth = OAuth()
 
 def create_app():
     app = Flask(__name__, template_folder= 'templates')
@@ -15,11 +20,24 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./fintech.db'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mygooodlord@5432/fintech'
     app.config['DEBUG'] = True
-    app.secret_key = 'd29fcc6206dab14e152635ce67605e05'
+    app.secret_key = os.getenv('SECRET_KEY')
     
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    oauth.init_app(app)
+    
+    google = oauth.register(
+        name='google',
+        client_id=os.getenv('GOOGLE_CLIENT_ID'),
+        client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+        access_token_url='https://oauth2.googleapis.com/token',
+        authorize_url='https://accounts.google.com/o/oauth2/auth',
+        api_base_url='https://www.googleapis.com/oauth2/v1/',
+        userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+        client_kwargs={'scope': 'openid email profile'},
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+    )
     
     from financialtrackerapp.blueprints.core.models import User
     
