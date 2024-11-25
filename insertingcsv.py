@@ -3,11 +3,11 @@ from financialtrackerapp.app import create_app, db
 from financialtrackerapp.blueprints.marketplace.models import Product
 
 # Load CSV data
-data = pd.read_csv('MOCK_DATA.csv')
+data = pd.read_csv('jumia_product_processed.csv')
 
 # Data cleaning
 data['Product'] = data['Product'].str.strip()  # Strip extra whitespace
-data['Price'] = data['Price'].replace('[\$,]', '', regex=True).astype(float)  # Remove $ and convert to float
+# data['Price'] = data['Price'].replace('[\$,]', '', regex=True).astype(float)
 data['Items_left'] = data['Items_left'].astype(int)  # Ensure integer type for items left
 
 # Initialize Flask app and use the app context
